@@ -5,6 +5,7 @@ import {
     Controller,
     Delete,
     Get,
+    Logger,
     Param,
     ParseIntPipe,
     Post,
@@ -18,9 +19,11 @@ import { UpdateBoardDto } from './dto/update-board.dto'
 @ApiTags('board')
 export class BoardController {
     constructor(private boardService: BoardService) {}
+    private readonly logger = new Logger(BoardController.name) // displays the controller's name on the CLI
 
     @Get()
     findAll() {
+        this.logger.log('Logger_Test')
         return this.boardService.findAll()
     }
 
