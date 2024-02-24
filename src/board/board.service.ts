@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common'
+import { CreateBoardDto } from './dto/create-board.dto'
+import { UpdateBoardDto } from './dto/update-board.dto'
 
 @Injectable()
 export class BoardService {
@@ -17,7 +19,7 @@ export class BoardService {
         return this.boards[index]
     }
 
-    create(data) {
+    create(data: CreateBoardDto) {
         // const lastIndex = this.boards.length
         // const newRecord = { id: lastIndex + 1, ...data }
         // this.boards.push(newRecord)
@@ -26,7 +28,7 @@ export class BoardService {
         return newBoard
     }
 
-    update(data, id: number) {
+    update(data: UpdateBoardDto, id: number) {
         const index = this.getBoardId(id)
         if (index > -1) {
             this.boards[index] = {

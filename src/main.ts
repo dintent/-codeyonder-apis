@@ -9,7 +9,7 @@ async function bootstrap() {
         .setTitle('yonder board')
         .setDescription('yonder board APIs')
         .setVersion('1.0')
-        .addTag('board')
+        .addTag('board') // the mapping to the one in @ApiTags in the board controller
         .build()
     const document = SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('api', app, document) // localhost:3000/api
