@@ -1,7 +1,9 @@
+import { ApiTags } from '@nestjs/swagger'
 import { BoardService } from './board.service'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 
 @Controller('board')
+@ApiTags('board')
 export class BoardController {
     constructor(private boardService: BoardService) {}
 
