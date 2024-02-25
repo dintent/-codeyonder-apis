@@ -14,11 +14,15 @@ import {
 } from '@nestjs/common'
 import { CreateBoardDto } from './dto/create-board.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
+import { ConfigService } from '@nestjs/config'
 
 @Controller('board')
 @ApiTags('board')
 export class BoardController {
-    constructor(private boardService: BoardService) {}
+    constructor(
+        private boardService: BoardService,
+        private readonly configService: ConfigService,
+    ) {}
     private readonly logger = new Logger(BoardController.name) // displays the controller's name on the CLI
 
     @Get()

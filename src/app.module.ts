@@ -3,9 +3,10 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { BoardModule } from './board/board.module'
 import { LoggingMiddleware } from './middleware/logging.midleware'
+import ConfigModule from './config'
 
 @Module({
-    imports: [BoardModule],
+    imports: [BoardModule, ConfigModule()], //Configuration module is a dynamic module so it must be used with brackets
     controllers: [AppController],
     providers: [AppService],
 })
