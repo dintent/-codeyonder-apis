@@ -8,17 +8,17 @@ import ConfigModule from './config'
 import { MongooseModule } from '@nestjs/mongoose'
 
 @Module({
-    imports: [
-        BoardModule,
-        ConfigModule(),
-        UserModule,
-        MongooseModule.forRoot(process.env.MONGO_URL),
-    ], //Configuration module is a dynamic module so it must be used with brackets
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    BoardModule,
+    ConfigModule(),
+    UserModule,
+    MongooseModule.forRoot(process.env.MONGO_URL),
+  ], //Configuration module is a dynamic module so it must be used with brackets
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(LoggingMiddleware).forRoutes('*') //register logging middleware and applies to all routes
-    }
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*') //register logging middleware and applies to all routes
+  }
 }

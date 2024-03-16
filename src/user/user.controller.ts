@@ -2,10 +2,10 @@ import { Controller, Get } from '@nestjs/common'
 
 @Controller('user')
 export class UserController {
-    signup() {}
-    login() {}
-    me() {}
+  signup() {}
+  login() {}
+  me() {}
 
-    @Get()
-    getUsers() {}
+  @Get()
+  getUsers() {}
 }
