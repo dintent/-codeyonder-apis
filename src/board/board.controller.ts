@@ -40,7 +40,7 @@ export class BoardController {
   @Post()
   create(@Body(new ValidationPipe()) data: CreateBoardDto) {
     //enable validation-pipe for this method only
-    return this.boardService.create(data)
+    return this.boardService.create_test(data)
   }
 
   @Put(':id')

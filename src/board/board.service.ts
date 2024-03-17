@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { CreateBoardDto } from './dto/create-board.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { Board, BoardDocument } from './schemas/board.schema'
 
 @Injectable()
 export class BoardService {
+  constructor(
+    @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
+  ) {}
   private boards = [
     { id: 1, name: 'smith', contents: 'content1' },
     { id: 2, name: 'kevin', contents: 'content1' },
@@ -26,6 +32,11 @@ export class BoardService {
     const newBoard = { id: this.getNextId(), ...data }
     this.boards.push(newBoard)
     return newBoard
+  }
+
+  async create_test(data: CreateBoardDto): Promise<Board> {
+    const createdBoard = await new this.boardModel(data)
+    return createdBoard.save()
   }
 
   update(data: UpdateBoardDto, id: number) {
