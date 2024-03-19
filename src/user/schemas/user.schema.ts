@@ -16,7 +16,13 @@ export class User extends Document {
 
   @ApiProperty({ description: 'name', example: 'id' })
   @Prop({ unique: true })
-  name: string
+  username: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
+
+// UserSchema.post('validate', function (user) {
+//   const notHashedPassword = user.password
+//   const salt: number = 10
+//   user.password = bcrypt.hashSync(notHashedPassword, salt)
+// })

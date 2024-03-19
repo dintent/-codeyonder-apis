@@ -28,7 +28,6 @@ export class BoardService {
   }
 
   async create(data: CreateBoardDto): Promise<Board> {
-    // const newRecord = { _id: this.getNextId(), ...data }
     const createdBoard = await new this.boardModel(data)
     return createdBoard.save()
   }
@@ -50,8 +49,4 @@ export class BoardService {
     }
     return deletedBoard
   }
-
-  // getNextId() {
-  //   return this.boardModel.length + 1
-  // }
 }
