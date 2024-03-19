@@ -16,6 +16,10 @@ export class Board extends Document {
   @IsString()
   @IsNotEmpty()
   contents: string
+
+  // @IsNotEmpty()
+  // @Prop({ required: true })
+  // _id: number
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board)

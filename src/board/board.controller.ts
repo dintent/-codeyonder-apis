@@ -7,7 +7,6 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   ValidationPipe,
@@ -32,7 +31,7 @@ export class BoardController {
   }
 
   @Get(':id')
-  find(@Param('id', ParseIntPipe) id: number) {
+  find(@Param('id') id: string) {
     // console.log(typeof id)
     return this.boardService.find(id)
   }
@@ -40,19 +39,19 @@ export class BoardController {
   @Post()
   create(@Body(new ValidationPipe()) data: CreateBoardDto) {
     //enable validation-pipe for this method only
-    return this.boardService.create_test(data)
+    return this.boardService.create(data)
   }
 
   @Put(':id')
   update(
     @Body(new ValidationPipe()) data: UpdateBoardDto,
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
   ) {
     return this.boardService.update(data, id)
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.boardService.delete(id)
   }
 }

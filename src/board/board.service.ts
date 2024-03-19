@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateBoardDto } from './dto/create-board.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
 import { InjectModel } from '@nestjs/mongoose'
@@ -10,64 +10,48 @@ export class BoardService {
   constructor(
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
-  private boards = [
-    { id: 1, name: 'smith', contents: 'content1' },
-    { id: 2, name: 'kevin', contents: 'content1' },
-    { id: 3, name: 'ryan', contents: 'content1' },
-  ]
 
-  findAll() {
-    return this.boards
+  async findAll(): Promise<Board[]> {
+    const boards = await this.boardModel.find()
+    if (!boards || this.boardModel.length == 0) {
+      throw new NotFoundException('Nothing is found')
+    }
+    return boards
   }
 
-  find(id: number) {
-    const index = this.boards.findIndex((board) => board.id === id)
-    return this.boards[index]
+  async find(id: string) {
+    const existingBoard = await this.boardModel.findById(id).exec()
+    if (!existingBoard) {
+      throw new NotFoundException('Nothing is found')
+    }
+    return existingBoard
   }
 
-  create(data: CreateBoardDto) {
-    // const lastIndex = this.boards.length
-    // const newRecord = { id: lastIndex + 1, ...data }
-    // this.boards.push(newRecord)
-    const newBoard = { id: this.getNextId(), ...data }
-    this.boards.push(newBoard)
-    return newBoard
-  }
-
-  async create_test(data: CreateBoardDto): Promise<Board> {
+  async create(data: CreateBoardDto): Promise<Board> {
+    // const newRecord = { _id: this.getNextId(), ...data }
     const createdBoard = await new this.boardModel(data)
     return createdBoard.save()
   }
 
-  update(data: UpdateBoardDto, id: number) {
-    const index = this.getBoardId(id)
-    if (index > -1) {
-      this.boards[index] = {
-        ...this.boards[index],
-        ...data,
-      }
-      return this.boards[index]
+  async update(data: UpdateBoardDto, id: string): Promise<Board> {
+    const updatedBoard = await this.boardModel.findByIdAndUpdate(id, data, {
+      new: true,
+    })
+    if (!updatedBoard) {
+      throw new NotFoundException(`Blog is not found: ${id}`)
     }
-    return null
+    return updatedBoard
   }
 
-  delete(id: number) {
-    const index = this.getBoardId(id)
-
-    if (index > -1) {
-      const boardDeleted = this.boards[index]
-      this.boards.splice(index, 1)
-      return boardDeleted
+  async delete(id: string): Promise<Board> {
+    const deletedBoard = await this.boardModel.findByIdAndDelete(id)
+    if (!deletedBoard) {
+      throw new NotFoundException('The board is not found')
     }
-    return null
+    return deletedBoard
   }
 
-  getBoardId(id: number) {
-    return this.boards.findIndex((board) => board.id === id)
-  }
-
-  getNextId() {
-    // sorting algorithm
-    return this.boards.sort((a, b) => b.id - a.id)[0].id + 1
-  }
+  // getNextId() {
+  //   return this.boardModel.length + 1
+  // }
 }
