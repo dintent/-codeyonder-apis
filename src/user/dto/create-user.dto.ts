@@ -1,12 +1,12 @@
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator'
 
 export class CreateUserDto {
-  @MinLength(8)
-  @MaxLength(10)
+  @MinLength(2)
+  @MaxLength(20)
   @IsNotEmpty()
   username: string
 
-  @MinLength(8)
+  @MinLength(4)
   @IsNotEmpty()
   password: string
 }

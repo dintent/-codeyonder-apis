@@ -1,8 +1,8 @@
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator'
 
 export class UpdateUserDto {
-  @MinLength(8)
-  @MaxLength(10)
+  @MinLength(2)
+  @MaxLength(20)
   @IsNotEmpty()
   username?: string
 
