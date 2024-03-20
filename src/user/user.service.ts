@@ -5,6 +5,7 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import * as bcrypt from 'bcrypt'
 import { LoginUserDto } from './dto/login-user.dto'
+import * as jwt from 'jsonwebtoken'
 
 @Injectable()
 export class UserService {
@@ -32,7 +33,10 @@ export class UserService {
     if (!match) {
       throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED)
     }
-    return user
+
+    const payload = { username }
+    const accessToken = jwt.sign(payload, 'secret_key', { expiresIn: '1d' })
+    return accessToken
   }
 
   async encryptPassword(password: string) {
