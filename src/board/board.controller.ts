@@ -9,11 +9,16 @@ import {
   Param,
   Post,
   Put,
+  UnauthorizedException,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common'
 import { CreateBoardDto } from './dto/create-board.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
 import { ConfigService } from '@nestjs/config'
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { UserInfo } from 'src/decorators/user-info.decorator'
+import { userInfo } from 'os'
 
 @Controller('board')
 @ApiTags('board')
@@ -37,13 +42,20 @@ export class BoardController {
   }
 
   @Post()
-  create(@Body(new ValidationPipe()) data: CreateBoardDto) {
+  @UseGuards(JwtAuthGuard)
+  create(
+    @UserInfo() userInfo,
+    @Body(new ValidationPipe()) data: CreateBoardDto,
+  ) {
+    if (!userInfo) throw new UnauthorizedException()
     //enable validation-pipe for this method only
     return this.boardService.create(data)
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   update(
+    @UserInfo() userInfo,
     @Body(new ValidationPipe()) data: UpdateBoardDto,
     @Param('id') id: string,
   ) {
@@ -51,7 +63,8 @@ export class BoardController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @UseGuards(JwtAuthGuard)
+  remove(@UserInfo() userInfo, @Param('id') id: string) {
     return this.boardService.delete(id)
   }
 }
