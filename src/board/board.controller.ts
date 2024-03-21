@@ -18,7 +18,6 @@ import { UpdateBoardDto } from './dto/update-board.dto'
 import { ConfigService } from '@nestjs/config'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { UserInfo } from 'src/decorators/user-info.decorator'
-import { userInfo } from 'os'
 
 @Controller('board')
 @ApiTags('board')
@@ -37,7 +36,7 @@ export class BoardController {
 
   @Get(':id')
   find(@Param('id') id: string) {
-    // console.log(typeof id)
+    // console.log((await this.boardService.find(id)).name)
     return this.boardService.find(id)
   }
 
@@ -59,12 +58,13 @@ export class BoardController {
     @Body(new ValidationPipe()) data: UpdateBoardDto,
     @Param('id') id: string,
   ) {
-    return this.boardService.update(data, id)
+    console.log(userInfo.username)
+    return this.boardService.update(data, id, userInfo)
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   remove(@UserInfo() userInfo, @Param('id') id: string) {
-    return this.boardService.delete(id)
+    return this.boardService.delete(id, userInfo)
   }
 }

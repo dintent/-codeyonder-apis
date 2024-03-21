@@ -1,9 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { CreateBoardDto } from './dto/create-board.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Board, BoardDocument } from './schemas/board.schema'
+import { User } from 'src/user/schemas/user.schema'
 
 @Injectable()
 export class BoardService {
@@ -32,7 +39,16 @@ export class BoardService {
     return createdBoard.save()
   }
 
-  async update(data: UpdateBoardDto, id: string): Promise<Board> {
+  async update(
+    data: UpdateBoardDto,
+    id: string,
+    UserInfo: User,
+  ): Promise<Board> {
+    const board = await this.find(id)
+    if (!board) throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND)
+    if (UserInfo.username !== board.name) {
+      throw new UnauthorizedException()
+    }
     const updatedBoard = await this.boardModel.findByIdAndUpdate(id, data, {
       new: true,
     })
@@ -42,7 +58,13 @@ export class BoardService {
     return updatedBoard
   }
 
-  async delete(id: string): Promise<Board> {
+  async delete(id: string, UserInfo: User): Promise<Board> {
+    const board = await this.find(id)
+    console.log(board.name)
+    if (!board) throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND)
+    if (UserInfo.username !== board.name) {
+      throw new UnauthorizedException()
+    }
     const deletedBoard = await this.boardModel.findByIdAndDelete(id)
     if (!deletedBoard) {
       throw new NotFoundException('The board is not found')
