@@ -6,6 +6,7 @@ import { LoggingMiddleware } from './middleware/logging.midleware'
 import { UserModule } from './user/user.module'
 import ConfigModule from './config'
 import { MongooseModule } from '@nestjs/mongoose'
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose'
     ConfigModule(),
     UserModule,
     MongooseModule.forRoot(process.env.MONGO_URL),
+    AuthModule,
   ], //Configuration module is a dynamic module so it must be used with brackets
   controllers: [AppController],
   providers: [AppService],

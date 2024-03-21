@@ -11,7 +11,6 @@ export class UserController {
   login(@Body(new ValidationPipe()) data: LoginUserDto) {
     return this.userService.login(data)
   }
-  me() {}
 
   @Get()
   getUsers() {}

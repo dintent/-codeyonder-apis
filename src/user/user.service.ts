@@ -23,7 +23,7 @@ export class UserService {
     return createdUser.save()
   }
 
-  async login(data: LoginUserDto): Promise<User> {
+  async login(data: LoginUserDto) {
     const { username, password } = data
     const user = await this.userModel.findOne({ username: username })
     if (!user) {
@@ -36,7 +36,11 @@ export class UserService {
 
     const payload = { username }
     const accessToken = jwt.sign(payload, 'secret_key', { expiresIn: '1d' })
-    return accessToken
+    return { accessToken }
+  }
+
+  async getUserByUsername(username: string) {
+    return await this.userModel.findOne({ username: username })
   }
 
   async encryptPassword(password: string) {
